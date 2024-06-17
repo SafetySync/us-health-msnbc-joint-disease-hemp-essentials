@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+<html lang="en"><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><base href=".">
+
+
+
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Joint`s Optimizer</title>
+    <script src="./index_files/dtime.js.下载"></script>
+    <link rel="stylesheet" href="./index_files/main.css">
+    <link rel="shortcut icon" href="https://product-landings.ams3.digitaloceanspaces.com/6654a027b2dc734af5b0633f/img/favicon.ico" type="image/x-icon">
+    <style>
+        .form_flex {
+            display: flex;
+            padding: 20px;
+            border: 1px solid #000
+        }
+
+        @media (max-width:520px) {
+            .form_flex {
+                flex-direction: column
+            }
+        }
+    </style>
+    <script type="text/javascript">
+        function random(n,r){return Math.floor(Math.random()*(r-n+1))+n}var nums=random(20,39)
+    </script>
+<style type="text/css">
+@font-face {
+  font-weight: 400;
+  font-style:  normal;
+  font-family: circular;
+
+  src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Book.woff2') format('woff2');
+}
+
+@font-face {
+  font-weight: 700;
+  font-style:  normal;
+  font-family: circular;
+
+  src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Bold.woff2') format('woff2');
+}</style></head><body><input type="hidden" id="_w_simile" data-inspect-config="3"><script type="text/javascript" src="chrome-extension://dbjbempljhcmhlfpfacalomonjpalpko/scripts/inspector.js"></script>
+
+
+    <style>
+        .header,
+        .header-mob {
+            display: block;
+            width: 100%;
+            background: transparent none repeat scroll 0 0;
+            margin: 0 auto
+        }
+
+        .header-mob {
+            display: none
+        }
+
+        .header {
+            padding: 0 !important
+        }
+
+        @media (max-width:800px) {
+            .header-mob {
+                display: block
+            }
+
+            .header {
+                display: none !important
+            }
+        }
+
+        ul {
+            display: block;
+            list-style-type: disc;
+            margin-block-start: 1em !important;
+            margin-block-end: 1em !important;
+            margin-inline-start: 0 !important;
+            margin-inline-end: 0 !important;
+            padding-inline-start: 40px !important
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        ul {
+            list-style: none
+        }
+    </style>
+    <header><a class="header-wrap" href="{offer_link}"><img class="header" src="./index_files/header.png" alt="#000" loading="lazy">
+            <img class="header-mob" src="./index_files/header_mob.png" alt="#" loading="lazy"></a></header>
+    <div class="container"><br>
+        <style>
+            .screenLock {
+                position: fixed;
+                width: 100%;
+                background: rgba(0, 0, 0, .7) none repeat scroll 0 0;
+                top: 0;
+                left: 0;
+                z-index: 99999;
+                display: none
+            }
+
+            .screenLock .msg {
+                position: absolute;
+                width: 90%;
+                max-width: 750px;
+                top: 150px;
+                left: 0;
+                right: 0;
+                margin: auto;
+                background: #21a7e5 none repeat scroll 0 0;
+                border: 7px solid #eee
+            }
+
+            .screenLock .msg>h1 {
+                color: #fff;
+                text-align: center;
+                font-size: 28px;
+                margin: 20px auto
+            }
+
+            .screenLock .msg .text {
+                display: inline-block;
+                vertical-align: middle;
+                max-width: 59%;
+                color: #fff;
+                text-align: left;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 120%
+            }
+
+            .screenLock .image {
+                display: inline-block;
+                vertical-align: middle;
+                max-width: 40%
+            }
+
+            .screenLock .close {
+                position: absolute;
+                top: 1px;
+                right: 15px;
+                font-size: 40px;
+                cursor: pointer
+            }
+
+            .screenLock .submit {
+                cursor: pointer;
+                height: 75px;
+                width: 400px;
+                background-color: #ec3b3b;
+                color: #fff;
+                font-size: 30px;
+                border-radius: 3px;
+                margin: 20px auto;
+                font-weight: 700
+            }
+
+            .screenLock .submit:hover {
+                background-color: #bb3d3d
+            }
+
+            h1 {
+                display: block;
+                width: auto;
+                line-height: 1.2;
+                color: #0a0a0a;
+                font-size: 23px
+            }
+
+            h2 {
+                display: block;
+                line-height: 1.2;
+                color: #0a0a0a;
+                font-size: 19px;
+                margin-top: 25px
+            }
+
+            h2::after {
+                content: "";
+                margin-top: 12px;
+                border-bottom: 4px solid #168de2;
+                display: block
+            }
+
+            a {
+                color: rgb(75 132 183);
+                text-decoration: underline;
+                font-weight: 700
+            }
+
+            a:hover {
+                color: #b0493b
+            }
+
+            hr {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border-width: 1px 0 0;
+                border-style: solid none none;
+                border-color: #eee currentcolor currentcolor;
+                -moz-border-top-colors: none;
+                -moz-border-right-colors: none;
+                -moz-border-bottom-colors: none;
+                -moz-border-left-colors: none;
+                border-image: none
+            }
+
+            body {
+                display: block;
+                font-family: "Open Sans", sans-serif;
+                background: #fafafa none repeat scroll 0 0;
+                height: auto;
+                color: #444;
+                line-height: 1.5625
+            }
+
+            .content {
+                display: block;
+                width: 97%;
+                max-width: 1000px;
+                margin: 0 auto;
+                background: #fff none repeat scroll 0 0;
+                padding: 25px 1.5%;
+                position: relative
+            }
+
+            .content-left {
+                display: block
+            }
+
+            .content-left-social {
+                display: block;
+                background: 0 0;
+                margin: 15px 0
+            }
+
+            .content-left-social-pictures {
+                display: block;
+                width: 50%;
+                float: left
+            }
+
+            .content-left-social-pictures img {
+                display: block;
+                width: auto;
+                max-width: 250px
+            }
+
+            .content-left-social-comments {
+                display: block;
+                float: right;
+                width: 50%;
+                text-align: right;
+                font-size: 13px
+            }
+
+            .content-left-social-comments a {
+                margin-left: 1%
+            }
+
+            .content-left-social::after {
+                content: "";
+                display: block;
+                clear: both
+            }
+
+            .content-left-doctor {
+                display: block;
+                width: 100%;
+                background-color: #e2e2e2;
+                padding: 2%;
+                margin-top: 25px
+            }
+
+            .content-left-doctor-foto {
+                display: block;
+                width: 48%;
+                float: left;
+                margin-right: 2%
+            }
+
+            .content-left-doctor-foto img {
+                width: 100%;
+                display: block
+            }
+
+            .content-left-doctor-text {
+                display: block;
+                width: 50%;
+                float: right
+            }
+
+            .content-left-doctor::after {
+                content: "";
+                display: block;
+                clear: both
+            }
+
+            .content-important {
+                display: block;
+                width: auto;
+                text-align: left;
+                font-weight: 700;
+                font-style: italic
+            }
+
+            .opros-product-block {
+                display: block;
+                width: auto;
+                margin-top: 2%
+            }
+
+            .like-block {
+                display: block;
+                width: 95.7%;
+                border: 2px solid #e6e6e6;
+                padding: 0 2% 2%;
+                margin: 3% 0;
+                border-radius: 3px
+            }
+
+            .like-block img {
+                display: block;
+                width: auto
+            }
+
+            .vk-container {
+                text-align: left;
+                font-family: tahoma, arial, verdana, sans-serif;
+                font-size: 15px;
+                color: #000;
+                text-decoration: none
+            }
+
+            .vk-header {
+                background: #dae2e8 none repeat scroll 0 0;
+                padding: 4px 4px 4px 6px;
+                margin-bottom: 10px
+            }
+
+            .vk-logo {
+                background: transparent none no-repeat scroll 0 0;
+                width: 16px;
+                height: 16px;
+                float: right;
+                margin-top: -1px
+            }
+
+            .vk-header-text {
+                padding: 2px 3px 1px;
+                line-height: 100%;
+                color: #45688e;
+                font-weight: 700
+            }
+
+            .VK-comment,
+            .VK-comment-load {
+                margin-bottom: 15px;
+                position: relative;
+                border-bottom: 1px solid #dae1e8;
+                padding-bottom: 15px
+            }
+
+            .VK-comment-name {
+                color: #2b587a;
+                font-weight: 700;
+                font-size: 12px
+            }
+
+            .VK-comment-date {
+                color: #999 !important
+            }
+
+            .content-right {
+                display: block;
+                width: 27%;
+                float: right;
+                position: relative
+            }
+
+            .content-right-recommend-container {
+                display: block;
+                max-width: 270px;
+                width: 100%
+            }
+
+            .content-right-recommend {
+                display: block;
+                width: auto
+            }
+
+            .content-right-recommend-top {
+                height: 48px;
+                background: #4aa224 none repeat scroll 0 0;
+                font-weight: 700;
+                color: #fff;
+                text-transform: uppercase;
+                line-height: 48px;
+                position: relative;
+                text-align: center;
+                font-size: 14px
+            }
+
+            .content-right-recommend-top::before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 17px 13px 0;
+                border-color: transparent #4aa224 transparent transparent;
+                left: 0;
+                bottom: -13px
+            }
+
+            .content-right-recommend-top::after {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 13px 17px 0 0;
+                border-color: #4aa224 transparent transparent;
+                right: 0;
+                bottom: -13px
+            }
+
+            .content-right-recommend-middle {
+                width: 86%;
+                display: block;
+                margin: auto;
+                padding: 1% 1% 7%;
+                text-align: center;
+                background: #fff none repeat scroll 0 0;
+                text-decoration: none
+            }
+
+            .content-right-recommend-middle img {
+                display: block;
+                width: 75%;
+                margin: 7% auto
+            }
+
+            .content-right-statistic {
+                display: block;
+                width: 96%;
+                padding: 0 2% 2%;
+                background: #f3f3f3 none repeat scroll 0 0;
+                color: #515151;
+                margin-top: 5%
+            }
+
+            .content-right-statistic-head {
+                display: block;
+                width: auto;
+                text-align: center;
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 1%
+            }
+
+            .content-right-statistic-info {
+                display: block;
+                width: 100%;
+                margin-bottom: 1%
+            }
+
+            .content-right-statistic-info-left {
+                display: block;
+                float: left;
+                width: 60%;
+                text-align: right;
+                font-size: 14px
+            }
+
+            .content-right-statistic-info-right {
+                display: block;
+                float: left;
+                width: 37%;
+                font-size: 14px;
+                margin-left: 3%;
+                font-weight: 700;
+                text-align: left
+            }
+
+            .content-right-statistic-info::after {
+                content: "";
+                display: block;
+                clear: both
+            }
+
+            .content::after {
+                content: "";
+                display: block;
+                clear: both
+            }
+
+            .footer {
+                display: block;
+                width: 97%;
+                max-width: 1000px;
+                padding: 1% 1.5%;
+                margin: 0 auto;
+                background: #ebebeb none repeat scroll 0 0
+            }
+
+            .footer-text {
+                color: #383838
+            }
+
+            @media screen and (max-width:1199px) {
+                .content-right {
+                    display: none
+                }
+
+                .content-left {
+                    width: 100%;
+                    padding-right: 0
+                }
+            }
+
+            @media screen and (max-width:989px) {
+                .content {
+                    max-width: 750px;
+                    padding: 3% 6%;
+                    width: 88%
+                }
+
+                .like-block {
+                    margin: 5% 0
+                }
+
+                .footer {
+                    position: relative;
+                    z-index: 1;
+                    max-width: 750px;
+                    padding: 5% 6% 8%;
+                    width: 88%
+                }
+            }
+
+            @media screen and (max-width:720px) {
+                .content-left-social-comments {
+                    font-size: 2.8vw
+                }
+
+                .content-left-social-pictures img {
+                    width: 100%
+                }
+
+                .content-left-social-pictures {
+                    margin-top: 1%
+                }
+
+                .screenLock {
+                    display: none !important
+                }
+            }
+
+            @media screen and (max-width:599px) {
+                .content-left-doctor-foto {
+                    float: none;
+                    width: 100%
+                }
+
+                .content-left-doctor-text {
+                    float: none;
+                    width: 100%;
+                    margin-top: 3%
+                }
+            }
+
+            @media screen and (max-width:429px) {
+                .like-block img {
+                    width: 100%
+                }
+            }
+
+            #popup-coment {
+                display: none;
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                width: auto;
+                background: #fff none repeat scroll 0 0;
+                border: 1px solid #dae2e8;
+                padding: 10px;
+                z-index: 100;
+                max-width: 375px
+            }
+
+            @media screen and (min-width:320px) and (max-width:768px) {
+                #popup-coment {
+                    bottom: 10px;
+                    left: 10px;
+                    background: #fff none repeat scroll 0 0;
+                    border: 1px solid #dae2e8;
+                    padding: 10px;
+                    z-index: 100;
+                    max-width: 315px;
+                    width: 86%
+                }
+            }
+
+            .vote-block {
+                width: auto;
+                display: block;
+                background: #eeeff1 none repeat scroll 0 0;
+                border-radius: 3px
+            }
+
+            .vote-block-head {
+                display: block;
+                text-align: left;
+                width: auto;
+                padding: 15px 20px
+            }
+
+            .vote-block-head h2 {
+                color: #8f0001;
+                text-transform: uppercase;
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 25px;
+                margin-top: 0
+            }
+
+            .vote-block-head span {
+                font-size: 18px;
+                color: #000;
+                text-transform: lowercase
+            }
+
+            .vote-block-content {
+                display: block;
+                width: auto;
+                border: 1px solid #eeeff1;
+                background: #fff none repeat scroll 0 0;
+                padding: 0 20px;
+                font-size: 14px !important
+            }
+
+            .vote-block-content-container:first-child {
+                margin-top: 30px
+            }
+
+            .vote-block-content-container:last-child {
+                margin-bottom: 40px
+            }
+
+            .vote-block-content-container {
+                display: block;
+                width: auto;
+                margin-bottom: 20px
+            }
+
+            .vote-block-content-container::after {
+                content: "";
+                display: block;
+                clear: both
+            }
+
+            .vote-block-content-text {
+                float: left;
+                display: block;
+                width: 40%;
+                text-align: left
+            }
+
+            .vote-block-content-stat {
+                display: block;
+                float: right;
+                width: 60%;
+                position: relative;
+                background: #eeeff1 none repeat scroll 0 0;
+                height: 25px
+            }
+
+            .vote-block-content-stat-line {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 35%;
+                height: 100%;
+                background: #66a01d none repeat scroll 0 0;
+                text-align: right
+            }
+
+            .vote-block-content-stat-line h6 {
+                font-size: 12px;
+                color: #eeeff1;
+                margin-left: 121%;
+                margin-top: 4px
+            }
+
+            .line-1 {
+                width: 23%;
+                background: #66a01d none repeat scroll 0 0
+            }
+
+            .line-2 {
+                width: 47%;
+                background: #66a01d none repeat scroll 0 0
+            }
+
+            .line-3 {
+                width: 8%;
+                background: #66a01d none repeat scroll 0 0
+            }
+
+            .line-4 {
+                width: 17%;
+                background: #939598 none repeat scroll 0 0
+            }
+
+            .line-5 {
+                width: 5%;
+                background: #939598 none repeat scroll 0 0
+            }
+
+            .line-1 h6 {
+                color: #66a01d
+            }
+
+            .line-2 h6 {
+                color: #66a01d;
+                margin-left: 108%
+            }
+
+            .line-3 h6 {
+                color: #66a01d
+            }
+
+            .line-4 h6 {
+                color: #939598
+            }
+
+            .line-5 h6 {
+                color: #939598
+            }
+
+            .outline font {
+                color: #000 !important;
+                font-size: 18px;
+                font-weight: 500;
+                text-shadow: 0 0 0 #000
+            }
+
+            .outline {
+                border: 4px double #ef7c7c;
+                padding: 2px 10px;
+                background: #fff5f5
+            }
+
+            a:active,
+            a:focus {
+                outline: 0
+            }
+
+            :focus {
+                outline: 0
+            }
+
+            button:active,
+            button:focus {
+                outline: 0 !important
+            }
+
+            button::-moz-focus-inner {
+                border: 0 !important
+            }
+
+            .myh2 {
+                display: block;
+                line-height: 1.2;
+                color: #0a0a0a;
+                margin-top: 25px;
+                -webkit-margin-before: .83em;
+                -webkit-margin-after: .83em;
+                -webkit-margin-start: 0;
+                -webkit-margin-end: 0;
+                font-weight: 700
+            }
+
+            @media screen and (max-width:602px) {
+                .footer p {
+                    margin-bottom: 50px
+                }
+            }
+
+            .content-left img {
+                max-width: 100%
+            }
+        </style>
+		
+		
+		<style>
+        /* Basic styling for <a> tags */
+        a {
+            display: inline-block;
+			color: orangered;
+            text-decoration: none;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            text-transform: uppercase; /* Convert text to uppercase */            
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transition for background and shadow */
+        }
+
+        /* Hover effect */
+        a:hover {
+            color: #008364; /* Darker blue background on hover */           
+        
+    </style>
+		
+        <div class="content-left">
+            <h1></h1>
+            <center>
+                <h1><b class="lt0">IF YOU'VE BEEN TOLD THAT IT IS IMPOSSIBLE TO CURE YOUR BACK AND JOINTS AFTER 50, THEN YOU SHOULD KNOW THAT IT IS NOT TRUE!</b><br>
+                </h1>
+            </center>
+            <div>
+                <span class="article-date">Published <time><script>dtime_nums(-0,!0)</script></time></span>
+            </div>
+            <div class="content-left-social">
+                <div class="content-left-social-pictures"><a href="{offer_link}"><img src="./index_files/social.png" loading="lazy"></a></div>
+            </div>
+            <h2 class="lt4">Joint disease is unavoidable and primarily affects the connective tissues in the body. It
+                leads to severe disability and significantly reduce quality of life. Many individuals with severe joint
+                disease experience complications that can be debilitating or even life-threatening.</h2>
+            <h2>
+                <font class="lt5" color="red"><strong>Dr. Barbara O'Neill:</strong> I am personally committed to
+                    ensuring that every individual with joint disease has access to this treatment.</font>
+            </h2>
+            <div class="content-left-doctor">
+                <div class="content-left-doctor-foto"><img src="./index_files/doc1.jpg" loading="lazy"></div>
+                <div class="content-left-doctor-text lt6">
+                    <strong>Dr. Barbara O’Neill is a medical doctor, nutritionist, and a health educator.</strong><br><br>She is recognized as one of the leading specialists in joint disease. Her professional experience extends over 30 years.
+                </div>
+            </div><br>
+            <p><i class="lt7">Keep in mind a simple truth and listen to nobody: joint diseases are treatable even at an old age</i>
+            </p>
+            <center>
+                <h2>
+                    <font class="lt8" color="red">A program has been launched in US that allows everyone to get the
+                        product at a special price!</font>
+                </h2><br>
+                <p class="lt9">This doctor claims that she can cure osteochondrosis which developed during 18 years in a
+                    couple of months. That she can cure a very old woman suffering from the most severe case of
+                    arthritis in 78 days. As for the joint pains, if treated properly, they will go within 4 days!
+                    During 30 years of her practice, she keeps confirming each of her statements by showing how it works
+                    in action. Immediately after live broadcast on the chanel 'MSNBC' (the program on the topic 'how to
+                    keep your joints healthy at any age') a well-known doctor Barbara O'Niell agreed to give us an
+                    interview.</p>
+                <p><b class="lt10">Journalist: </b>How do you do, Dr. O'Neill, Tell me, is the following statement true,
+                    that joint diseases and osteochondrosis are inevitable for mature people?</p><img src="./index_files/4.jpg" alt="#" loading="lazy" style="width:100%">
+                <p class="lt11"><b>"Dr. Barbara O’Neill:</b> Hello, Susan. Of course, it is not true. Excessive trust in
+                    doctors who strive to cure you for 10 years but never succeed in doing so, that is inevitable for
+                    mature people. As a matter of fact, joints, chondrosis and the entire skeletal system can be very
+                    well treated at any age. And this is not a miracle but just pure science.<br>If you know the secret and put a bit of efforts in terms of self-discipline, you can cure the disease at home very fast, thousands of my patients do that."
+                </p><br>
+                <p><b class="lt13">Journalist: </b>And what is the secret?</p>
+                <p class="lt14"><b>Dr. Barbara O’Neill:</b> The secret is in understanding why you have pain. Overall
+                    there are up to 147 different possible reasons for the development of osteochondrosis and arthrosis
+                    listed in medical encyclopedias, but the consequence is one and the same - joints, vertebra and
+                    cartilage lose their elasticity, hence the pain. They are worn out because of poor blood
+                    circulation.</p>
+                <p class="lt15">That's the whole secret, we cure the joint by restoring its blood supply.</p>
+                <p><strong class="lt16">Journalist: </strong>Can you explain how joint diseases impact a person's life?
+                    Unlike injuries which are often temporary, how do chronic joint conditions affect individuals?</p>
+                <p class="lt17"><b>Dr. Barbara O’Neill:</b> Certainly. Joint diseases such as osteoarthritis, rheumatoid
+                    arthritis, and gout can have profound effects on an individual's quality of life. Let's start with
+                    some of the primary complications and their consequences:</p>
+                <p class="lt18" style="font-weight:600;font-size:18px">OSTEOARTHRITIS</p>
+                <p class="lt19"><u>Consequences</u>: Severe pain during movement, loss of joint function, and reduced
+                    mobility. This can lead to a dependency on painkillers and decreased participation in daily
+                    activities.</p><br><img src="./index_files/my-img3.jpg" alt="#" style="width:100%" loading="lazy"><br>
+                <p class="lt20" style="font-weight:600;font-size:18px">RHEUMATOID ARTHRITIS</p>
+                <p class="lt21"><u>Consequences:</u> Chronic inflammation and pain, significant swelling, and
+                    deformities in the joints. Over time, this can cause irreversible joint damage and severe
+                    disability.</p><br><img src="./index_files/my-img4.jpg" alt="#" style="width:100%" loading="lazy"><br>
+                <p class="lt22" style="font-weight:600;font-size:18px">GOUT</p>
+                <p class="lt23"><u>Consequences:</u> Acute and intense joint pain, often starting in the big toe, along
+                    with swelling and redness. Repeated attacks can lead to joint erosion and chronic pain.</p>
+                <br><img src="./index_files/my-img5.jpg" alt="#" style="width:100%" loading="lazy"><br>
+                <p style="margin-top:20px"><strong class="lt26">Journalist: </strong>But isn't it generally conceded
+                    that it is almost impossible to restore blood circulation after the age of 45?</p>
+                <p class="lt27"><b>Dr. Barbara O’Neill:</b> This is complete nonsense. I got myself out of a wheelchair
+                    after an injury, and this was more serious that just turning 45.</p>
+                <p><strong class="lt32">Journalist: </strong>Have you saved others from a wheelchair?</p>
+                <p class="lt33"><b>"Dr. Barbara O’Neill:</b> Yes, and more than once. But most of my patients are
+                    ordinary people over 40 who developed these diseases as they grew older. They come to me with
+                    similar problems: osteochondrosis, arthrosis, radiculitis, pinched nerve. These diseases exhaust you
+                    and don't let you live normally.<br><br>People complain of pain, it's hard even to walk. They are just regular citizens, not sporstmen and not disabled. They cry 'Why me? What have I done?' I reply plainly 'let's stop whining and start restoring blood circulation'."
+                </p>
+                <center><a class="redbtn" href="{offer_link}">GET YOUR BOTTLE</a></center>
+                <p><strong class="lt34">Journalist: </strong>How do you restore blood circulation at this age?</p>
+                <p class="lt35"><b>Dr. Barbara O’Neill:</b> Until recently I treated my patients with the help of a
+                    complex movement program consisting of 96 exercises which involved trainers. This is an exteremely
+                    effective method, but very long and hard.<br><br>It hurts, it is difficult, people don't have time to hit the gym. I believed that there exists an easier and more modern method and I've found it.
+                </p><br>
+                <p><strong class="lt38">Journalist:</strong> How very interesting! Will you tell our readers about it?
+                </p>
+                <p class="lt39"><b>Dr. Barbara O’Neill:</b> Sure. Our centre was the first one in US to get a certified
+                    access to a brand-new remedy for osteochondrosis and joint pain. I have to admit, when I first
+                    learnt about it I just laughed because I didn't believe in its effectiveness. But I was amazed by
+                    the results of our tests - 4567 of patients completely got rid of their condition, and that is more
+                    than 94% of all subjects. 5.6 felt a significant improvement, and only 0.4% didn't notice any
+                    changes.</p><br>
+                <p><strong class="lt41">Journalist: </strong>What kind of remedy is it?</p>
+                <p class="lt42"><b>Dr. Barbara O’Neill:</b> I'm talking about a unique remedy Joint`s Optimizer. This
+                    Joint`s Optimizer makes it possible to forget about back and joint pain virtually in no time, no
+                    more than 4 days, and cure even the most neglected cases in a couple of months.<br>More than 1.3 million dollars was spent on the development of its formula and almost 13 million dollars were paid for the right to distribute this product across the country.
+                </p>
+                <p><strong class="lt43">Journalist: </strong>So does that mean that Joint`s Optimizer can be bought only
+                    in US?</p>
+                <p class="lt44"><b>Dr. Barbara O’Neill:</b> At the moment, yes. But starting from the next year, it will
+                    be weidly available.</p><br>
+                <p><strong class="lt45">Journalist: </strong>How does this miraculous Joint`s Optimizer work?</p>
+                <p class="lt46"><b>Dr. Barbara O’Neill:</b> There's no miracle, only pure science. The Joint`s Optimizer
+                    consists of 32 powerful components which make weakened old cells function 7 times faster when they
+                    get into contact with them, thus the cells gradually rejuvenate.<br>Just by one gum a day , you will activate more than 930000 cells which will be of good service to your blood flow. This is how this treatment goes. The main thing here is stability.
+                </p><br>
+                <p><strong class="lt47">Journalist: </strong>Sounds impressive. But we need another explanation, what
+                    would it mean for people with ordinary diseases?</p>
+                <p class="lt48"><b>Dr. Barbara O’Neill: </b>This means that medieval American medicine is finally
+                    becoming a thing of the past and you can cure your diseases at home within 1-2 months. The Joint`s
+                    Optimizer has no freezing or anaesthetizing effects, it 'relaunches' the body on a cellular level.
+                    It removes the underlying cause of pains and puts joints and spine back in their initial, normal
+                    state. A patient not just gets rid of symptoms, but also eliminates the core of the disease -
+                    weakened blood flow caused by slow dying cells.<br><br>On the very first day the Joint`s Optimizer triggers the functioning of the body regenerative systems. It also relieves pain syndrome, which you will feel at once. In 2-3 weeks the treatment will be finished, but keep in mind that you should repeat the course eventually in order to prevent relapse.
+                </p>
+                <center><img alt="" src="./index_files/prod.png" style="max-width:500px" loading="lazy"></center><br>
+                <p><strong class="lt49">Journalist: </strong>Does the Joint`s Optimizer help to cure arthrosis and
+                    osteochondrosis exclusively?</p>
+                <p class="lt50"><b>Dr. Barbara O’Neill:</b> No, that's what I'm trying to make you understand: it acts
+                    on a cellular level, restoring your blood flow. It cures any kind of disease related to joints and
+                    spine:<br>arthrosis and arthritis, sciatica, rheumatism, radiculitis, herniated vertebra. Injuries, traumas, bruises, fractures, even calloses - the Joint`s Optimizer is highly effective in all these cases.
+                </p><br>
+                <p><strong class="lt51">Journalist: </strong>This seems like a very curious remedy. Does it really
+                    eliminate all these diseases, not just relieve the pain?</p>
+                <p class="lt52"><b>Dr. Barbara O’Neill:</b> The Joint`s Optimizer alleviates pain (at early stages of
+                    the treatment) and eventually completely eliminates the disease. Don't get me wrong, I like
+                    exercises and sport and I'm not going to quit it, but for most of my patients this gel is the
+                    easiest, most effective and available method of treatment.</p>
+                <div>
+                    <div class="vote-block">
+                        <div class="vote-block-head">
+                            <h2 class="lt54">
+                                POLL:<span>What has helped you cure your joints and improve your joint health?</span>
+                            </h2>
+                        </div>
+                        <div class="vote-block-content">
+                            <div class="vote-block-content-container">
+                                <div class="vote-block-content-text lt55">Medicines:</div>
+                                <div class="vote-block-content-stat">
+                                    <div class="vote-block-content-stat-line line-1">
+                                        <h6 class="lt56">23%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vote-block-content-container">
+                                <div class="vote-block-content-text lt57"><a href="{offer_link}">Joint`s
+                                        Optimizer</a>:</div>
+                                <div class="vote-block-content-stat">
+                                    <div class="vote-block-content-stat-line line-2">
+                                        <h6 class="lt58">47%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vote-block-content-container">
+                                <div class="vote-block-content-text lt59">Traditional Medicine:</div>
+                                <div class="vote-block-content-stat">
+                                    <div class="vote-block-content-stat-line line-3">
+                                        <h6 class="lt60">8%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vote-block-content-container">
+                                <div class="vote-block-content-text lt61">Looking for a solution:</div>
+                                <div class="vote-block-content-stat">
+                                    <div class="vote-block-content-stat-line line-4">
+                                        <h6 class="lt62">17%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vote-block-content-container">
+                                <div class="vote-block-content-text lt63">I don't think it's possible:</div>
+                                <div class="vote-block-content-stat">
+                                    <div class="vote-block-content-stat-line line-5">
+                                        <h6 class="lt64">5%</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><br>
+                <p><strong>Journalist: </strong>I guess many would like to know where can they get it?</p>
+                <p><strong class="lt65">Dr. Barbara O’Neill:</strong> We wanted to begin selling it in the pharmacies,
+                    but we don't seem to come to terms with pharmacists, because the Joint`s Optimizer can spoil their
+                    business. People keep buying their medications for years, and there are more and more of those in
+                    need of treatment - that's the actual state of affairs that suits
+                    pharmacists.<br><br>So now we sell it exclusively on the official site.<br>There are some benefits though - we sell directly, without middlemen, which gives us the chance to lower the price making it 4,7 cheaper than retail price.<br><br>Shipping is conducted by mail, this is home treatment so you won't be needing a specialist's observation. However, you shouldn't take my word for it. Try remedies produced by other manufacturers if you want to compare. But I'm sure that you won't find anything even remotely similar to Motion Energy in terms of its effectiveness.
+                </p><br>
+                <p><strong>Journalist: </strong>Thank you, doctor, for the interview! Is there anything you would like
+                    to add for our readers before we finish?</p><br>
+                <p><strong>Dr. Barbara O’Neill: </strong>Yes! Yes of course. I would like to call to our readers
+                    attention that back and joints diseases get 'younger', i.e. not only old people have it now. Even
+                    mild regular pains is the sign which you must not ignore. Your doctor is not going to persuade you
+                    to get
+                    treated.<br><br>And remember: the diseases triggered by joint and spine pains don't only bring discomfort. They also shorten your lifespan by 10-15 years.<br><br>P.S.: The doctor decided to give Joint`s Optimizer to the first 50 buyers at a discount price! Go to the official site and maybe you will get lucky!
+                </p>
+                <hr>
+                <div class="content-important lt67" style="display:none">Avoid fakes!! S-a concluzionat că<script>
+                        d=new Date,p=new Date(d.getTime()+0),monthA="gennaio, febbraio, marzo, aprile, maggio, giugno, luglio, agosto, settembre, ottobre, novembre, dicembre".split(","),document.write(monthA[p.getMonth()])
+                    </script> giugno maggiofebbraio și<script>
+                        d=new Date,p=new Date(d.getTime()+26784e5),monthA="gennaio, febbraio, marzo, aprile, maggio, giugno, luglio, agosto, settembre, ottobre, novembre, dicembre".split(","),document.write(monthA[p.getMonth()])
+                    </script> luglio giugnomarzodecembrie - cel mai bun moment pentru a începe tratamentul diabetului. Datorită
+                    stabilizării temperaturii medii, accelerează metabolismul, crește circulația sângelui în organism,
+                    crește fluxul de sânge și oxigen în organele interne, efectul utilizării "<a href="{offer_link}">
+                        Joint`s Optimizer</a>" crește. Tratamentul pentru diabet și complicații are loc cu 67% mai rapid
+                    decât ar fi avut loc în alte perioade ale anului. Restaurarea funcțiilor organismului are loc la
+                    100% pe parcursul întregului curs de tratament.</div><br>
+                <div class="outline">
+                    <p><b><font class="lt68" color="#4E4E4E">Avoid fakes!! The original <a href="{offer_link}">Joint`s Optimizer</a> can only be purchased from <a href="{offer_link}">the official website</a></font></b>
+                    </p>
+                </div><br><br>
+            </center>
+            <div class="row">
+                <div class="col-xs-12"><img src="./index_files/xoffer.jpg" class="img-responsive" loading="lazy">
+                    <p class="text-center pink-text m-b-4">
+                        <strong>(PROMOTIONAL PRICING FOR A LIMITED TIME ONLY - CLAIM YOURS NOW BEFORE THEY'RE ALL GONE)</strong>
+                    </p>
+                    <p class="m-b-5"></p>
+                    <p><strong><span class="su-highlight" style="background:#ffef1e;color:#000;margin:15px 0">EDITOR’S NOTE: For a limited time, the Official Suppliers of <strong><a href="{offer_link}"><span class="prod_name">Joint`s Optimizer</span></a></strong>
+                        have agreed to offer a <span style="color:red;font-weight:700">40% OFF</span> Sale
+                    </span></strong></p><strong>
+                    <p></p>
+                    <div class="sue-panel" data-url="" style="background-color:#f21502;color:#333;border-radius:0;-moz-border-radius:0;-webkit-border-radius:0;box-shadow:0 1px 2px #eee;-moz-box-shadow:0 1px 2px #eee;-webkit-box-shadow:0 1px 2px #eee;border:1px solid #f21502">
+                        <div class="sue-panel-content sue-content-wrap" style="text-align:center;font-size:17px;font-weight:700">
+                            <strong><span style="color:#ffef1e">UPDATE:&nbsp;LIMITED TIME DISCOUNT STILL AVAILABLE</span><br><span style="font-size:20px"><span style="color:#ffef1e">As of <span style="color:#fff"><script>var mydate=new Date,year=mydate.getYear(),day=(year<1e3&&(year+=1900),mydate.getDay()),month=mydate.getMonth(),daym=mydate.getDate(),dayarray=(daym<10&&(daym="0"+daym),new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")),montharray=new Array("January","February","March","April","May","June","July","August","September","October","November","December");document.write(dayarray[day]+", "+montharray[month]+" "+daym+", "+year)</script></span>, <span style="font-size:18px;color:#ffef1e"> There Are Less Than <a href="{offer_link}"><span style="color:#fff"><u> <script type="text/javascript">document.write(nums)</script>2823 </u></span></a>Exclusive, Limited Time <span style="color:#fff">40%</span> Discounts!</span></span></span></strong>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row revival-box form_flex">
+                        <div class="col-sm-1" style="text-align:center">
+                            <h5 style="font-size:15px"><a href="{offer_link}"><b>FREE Bottle + FREE Shipping Of <span class="prod_name">Joint`s Optimizer</span></b></a>
+                            </h5><a target="_top" href="{offer_link}"><img src="./index_files/prod.png" class="img-responsive rev prod_img" style="max-height:300px;max-width:300px;position:relative;right:40px;" loading="lazy"></a>
+                        </div>
+                        <div class="col-sm-3 revival-text" align="center"><a target="_top" href="{offer_link}">
+                                <h1><span style="color:red;font-weight:700;font-size:35px">Joint`s Optimizer</span></h1>
+                            </a><a target="_top" href="{offer_link}"><img src="./index_files/order-btn.png" class="img-responsive button" loading="lazy">
+                            </a><img src="./index_files/trust-stack-compressed.png" alt="" class="img-responsive" loading="lazy">
+                        </div>
+                    </div>
+                </strong></div></div><br><br>
+            <style>
+                .my-coments {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 30px
+                }
+
+                .my-coment {
+                    width: 100%;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px
+                }
+
+                .my-coment img {
+                    width: 100%;
+                    max-width: 50px
+                }
+
+                .content__my-coment {
+                    display: flex;
+                    flex-direction: column;
+                    color: #1a1a1a
+                }
+
+                .content-date__my-coment {
+                    font-size: 14px;
+                    color: #717171
+                }
+
+                .content-name__my-coment {
+                    color: rgba(25, 69, 164, .961);
+                    font-weight: 700
+                }
+            </style>
+            <div class="my-coments">
+                <div class="my-coment"><img src="./index_files/com-1.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Andrew</div>
+                        <div class="content-date__my-coment date-3">14.06.2024</div>
+                        <div class="content-text__my-coment">I ordered this <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a> for myself. It's a pity that there was no
+                            discount. It came very fast. The result surprised me. All bone related diseases were gone.
+                            Until recently my knees and back hurt awfully for several years.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-2.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Edmund Hines</div>
+                        <div class="content-date__my-coment date-3">14.06.2024</div>
+                        <div class="content-text__my-coment">After winter hunting my joints hurt like hell. I read a lot
+                            of positive reviews on the <a class="content-text-ofer" href="{offer_link}">Joint`s
+                                Optimizer</a> and ordered it. I didn't expect something extraordinary, but the day after
+                            the beginning of treatment I felt noticeably better! I was more active, my joints didn't
+                            hurt. I recommend!</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-3.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">April</div>
+                        <div class="content-date__my-coment date-3">14.06.2024</div>
+                        <div class="content-text__my-coment">I ordered this <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a> for my husband 2 months ago. He suffered
+                            from back pains. He says that the pain is completely gone. After the treatment it didn't
+                            hurt, no pain whatsoever. I'm happy that now he can do his house chores;)</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-4.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Anthony Marsh</div>
+                        <div class="content-date__my-coment date-3">14.06.2024</div>
+                        <div class="content-text__my-coment">I ordered the <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>, was just in time to get it at a discount.
+                        </div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-5.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Sharlene McCarthy</div>
+                        <div class="content-date__my-coment date-2">15.06.2024</div>
+                        <div class="content-text__my-coment">My colleague treated herself with this <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>. She spoke very
+                            highly of it. I noticed that she stopped limping. Now I ordered it myself and my mother,
+                            while the special is on. Thank you!</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-6.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Emma Hawkins</div>
+                        <div class="content-date__my-coment date-3">14.06.2024</div>
+                        <div class="content-text__my-coment">I know about this miraculous <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>! For the last 5 years I tried ointments,
+                            patches and pills - nothing helped. It's good that my sister advised <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>. The problems with
+                            the back and leg joints are just gone</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-7.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Janel Wood</div>
+                        <div class="content-date__my-coment date-2">15.06.2024</div>
+                        <div class="content-text__my-coment">Interesting... I've decided to order.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-8.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">George Stone</div>
+                        <div class="content-date__my-coment date-2">15.06.2024</div>
+                        <div class="content-text__my-coment">Great remedy! I've been taking it for only 1 week, already
+                            feel improvements.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-9.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Lucinda Barnett</div>
+                        <div class="content-date__my-coment date-2">15.06.2024</div>
+                        <div class="content-text__my-coment">My daughter ordered one for me. I never believed in these
+                            modern developments. But now I have to admit that nothing ever helped me better than <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-10.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Helen Atkins</div>
+                        <div class="content-date__my-coment date-1">16.06.2024</div>
+                        <div class="content-text__my-coment">I ordered for myself a week ago. I received it yesterday at
+                            the post office, paid on delivery. Today I'm starting to use it.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-11.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Peter Eaton</div>
+                        <div class="content-date__my-coment date-1">16.06.2024</div>
+                        <div class="content-text__my-coment">My back was sore all my life. It's a hereditary problem.
+                            I've already been to all the osteopaths, masseurs and folk healers. In the last few years I
+                            even had troubles tying my shoelaces. I read a lot of good things about the <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a> but I was afraid
+                            to order. Now I regret that I didn't start taking it earlier. My back haven't been in such a
+                            great condition since I was 17 years old! I advise you to try.</div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-12.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Ann Powell</div>
+                        <div class="content-date__my-coment date-0">17.06.2024</div>
+                        <div class="content-text__my-coment">The doctors have been treating me for 3 years already.
+                            Hopefully, <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a> will
+                            help me. I made an order, the girl on the phone explained everything. Waiting for my parcel.
+                        </div>
+                    </div>
+                </div>
+                <div class="my-coment"><img src="./index_files/com-13.jpg" alt="#" loading="lazy">
+                    <div class="content__my-coment">
+                        <div class="content-name__my-coment">Thomas Garrett</div>
+                        <div class="content-date__my-coment date-0">17.06.2024</div>
+                        <div class="content-text__my-coment">I ordered this <a class="content-text-ofer" href="{offer_link}">Joint`s Optimizer</a>. The operator said that there are few
+                            packages left at a discount price. If you want to get it, hurry up!</div>
+                    </div>
+                </div>
+            </div>
+          </div>
+       </div>
+	
+	<script>        
+        document.addEventListener("DOMContentLoaded", function() {
+            const offerlink = "{offer_link}"; 
+            const images = document.querySelectorAll("img");
+
+            images.forEach(image => {
+                image.style.cursor = "pointer"; 
+                image.addEventListener("click", function() {
+                    window.location.href = '{offer_link}';
+                });
+            });
+        });
+    </script>
+	
+            </body></html>
